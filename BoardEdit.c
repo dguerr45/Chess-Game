@@ -83,9 +83,8 @@ int moves(int liveBoard[8][8], char input1[7], char input2[7], int *capture, int
         liveBoard[row2][col2] = liveBoard[row1][col1]; // set new space piece equal to the old space piece
         fiftyMoveReset = 1;    // becomes 1 if a capture happens
         *capture = 1;    //becomes 1 if capture happens
-    } 
-    else if (is_space_blank(liveBoard[row2][col2]) == 1)
-    {
+
+    } else if(is_space_blank(liveBoard[row2][col2]) == 1){
         if (abs(liveBoard[row1][col1]) == 1){ // if piece moved is black/white pawn
             fiftyMoveReset = 1;
         }
@@ -95,6 +94,7 @@ int moves(int liveBoard[8][8], char input1[7], char input2[7], int *capture, int
             if (white_or_black(liveBoard[row1][col1]) == 1){
                 liveBoard[row2][col2] = liveBoard[row1][col1]; // update the space it moves two normally,
                 liveBoard[row2 + 1][col2] = 0; // set the space below it to be empty
+                
             } else {
                 liveBoard[row2][col2] = liveBoard[row1][col1]; // update the space it moves to normally,
                 liveBoard[row2 - 1][col2] = 0; // set the space above it to be empty

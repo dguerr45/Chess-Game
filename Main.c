@@ -5,8 +5,6 @@
 /*														  */
 /**********************************************************/
 
-// Started 7/23/25 ** delete later
-
 #include "GameSet.h"
 #include "BoardEdit.h"
 #include <stdio.h>
