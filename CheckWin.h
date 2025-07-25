@@ -5,7 +5,8 @@
 
 #include <stdio.h>
 
-//function for check()
+//checks if either king is in check. Returns 1 if white king is in check
+//returns 2 if black king is in check. Otherwise, returns 0
 int check(int board[8][8]);
 
 //function for lookahead

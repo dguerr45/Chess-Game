@@ -6,7 +6,6 @@
    
 //checks if either king is in check. Returns 1 if white king is in check
 //returns 2 if black king is in check. Otherwise, returns 0
-
 int check(int board[8][8]){
     int roww, colw, rowb, colb, x, y, z; // variables for position of kings
     roww = colw = rowb = colb = 0;
@@ -251,7 +250,7 @@ int check(int board[8][8]){
         }
     }
  
-    //check f(r white knights attacking black
+    //check for white knights attacking black
     if((rowb+2 <= 7)&&(colb+1 <= 7)){
     	if(board[rowb+2][colb+1] == 3){
 	    return 2;
@@ -388,7 +387,7 @@ int lookahead(int board[8][8], char input1[7], char input2[7]){
     }
 }
 
-//this willl check to see if game ends via checkmate
+//this will check to see if game ends via checkmate
 //returns: 0 for no checkmate, 1 for white in checkmate
 //returns: 2 for black in checkmate
 int checkmate(int b[8][8], int colorincheck){

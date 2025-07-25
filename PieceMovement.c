@@ -384,38 +384,20 @@ int BishopMoves(char originalPos[7], char newPos[7], int liveBoard[8][8]){
     return 0;
 }
 
-// helper function that checks if a space is blank or not
 int is_space_blank(int space)
 {
-	if (space == 0)
-	{
+	if (space == 0){
 		return 1;
 	}
-
 	return 0;
 }
 
-// helper function to determine if a piece on a space is white (postive) or black (negative)
 int white_or_black(int space)
 {
-	if (space > 0)
-	{
-		return 1; // returns 1 if white
+	if (space > 0){
+		return 1;
 	}
-
-	return 0; // returns 0 if black
-}
-
-void has_king_moved(int king)
-{
-	if (white_or_black(king) == 1)
-	{
-		king_move_w = 1;
-	}
-	else
-	{
-		king_move_b = 1;
-	}
+	return 0;
 }
 
 int KingMoves(char originalPos[7], char newPos[7], int liveBoard[8][8])
@@ -434,27 +416,15 @@ int KingMoves(char originalPos[7], char newPos[7], int liveBoard[8][8])
 	diff_row = (abs(row_old - row_new));
 	diff_col = (abs(col_old - col_new));
 
-	// white
-	if (white_or_black(liveBoard[row_old][col_old]) == 1)
-	{
-		// a king can only move a max of 1 row 1 column away from itself
-		if ((diff_row == 0 && diff_col == 1) || (diff_row == 1 && diff_col == 0) || (diff_row == 1 && diff_col == 1))
-		{
-		    has_king_moved(liveBoard[row_old][col_old]);
-			return 1;	
+	// a king can only move a max of 1 row 1 column away from itself
+	if ((diff_row == 0 && diff_col == 1) || (diff_row == 1 && diff_col == 0) || (diff_row == 1 && diff_col == 1)){
+		if(white_or_black(liveBoard[row_old][col_old]) == 1){
+			king_move_w = 1;
+		} else {
+			king_move_b = 1;
 		}
+		return 1;	
 	}
-
-	// black
-	if (white_or_black(liveBoard[row_old][col_old]) == 1)
-	{
-		if ((diff_row == 0 && diff_col == 1) || (diff_row == 1 && diff_col == 0) || (diff_row == 1 && diff_col == 1))
-		{
-            has_king_moved(liveBoard[row_old][col_old]);;
-		    return 1;	
-		}
-	}
-
 	return 0;
 }
 
@@ -795,29 +765,23 @@ int castling(char originalPos[3], int liveBoard[8][8], int direction)
 		{
 			if (direction == 1)
 			{
-					if (is_space_blank(liveBoard[row_king][3]) == 1 && is_space_blank(liveBoard[row_king][2]) == 1 && is_space_blank(liveBoard[row_king][1]) == 1)
-					{
-						return 1;
-					}
-					else
-					{
-						return 2; // can't castle because pieces are in the way
-					}
+				if (is_space_blank(liveBoard[row_king][3]) == 1 && is_space_blank(liveBoard[row_king][2]) == 1 &&
+					is_space_blank(liveBoard[row_king][1]) == 1){
+					return 1;
+				} else {
+					return 2; // can't castle because pieces are in the way
+				}
 			}
 			else if (direction == 2)
 			{
-					if (is_space_blank(liveBoard[row_king][5]) == 1 && is_space_blank(liveBoard[row_king][6]) == 1)
-					{
-						return 1;
-					}
-					else
-					{
-						return 2;
-					}
+				if (is_space_blank(liveBoard[row_king][5]) == 1 && is_space_blank(liveBoard[row_king][6]) == 1){
+					return 1;
+				} else {
+					return 2;
+				}
 			}
 		}
 	}
-
 	return 0;
 }
 

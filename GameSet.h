@@ -25,8 +25,8 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list);
 //begins a singleplayer game
 void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list);
 
-//resets character arrays used for input
-void resetInputs(char input1[7], char input2[7]);
+//resets character array used for input
+void resetInputs(char input[7]);
 
 //initializes the board for beginning of game
 void boardReset(int liveBoard[8][8]);

@@ -78,31 +78,26 @@ int moves(int liveBoard[8][8], char input1[7], char input2[7], int *capture, int
     row2 = abs( input2[1] - 56 );
 
     // updates board according to move
-    if(liveBoard[row2][col2] != 0) // if space is not blank,
+    if(liveBoard[row2][col2] != 0) // if a capture is happening,
     {
         liveBoard[row2][col2] = liveBoard[row1][col1]; // set new space piece equal to the old space piece
         fiftyMoveReset = 1;    // becomes 1 if a capture happens
         *capture = 1;    //becomes 1 if capture happens
     } 
-    else if (is_space_blank(liveBoard[row2][col2]) == 1) // if space is blank, 
+    else if (is_space_blank(liveBoard[row2][col2]) == 1)
     {
-        if (abs(liveBoard[row1][col1]) == 1) // if piece moved is black/white pawn
-        {   			
+        if (abs(liveBoard[row1][col1]) == 1){ // if piece moved is black/white pawn
             fiftyMoveReset = 1;
         }
         *capture = 0;    //becomes 0 if capture didn't happen
 
-        if (get_en_passant() == 1) // and en passant has been performed,
-        {
-            if (white_or_black(liveBoard[row1][col1]) == 1) // if the piece is white,
-            {
-                liveBoard[row2][col2] = liveBoard[row1][col1]; // still update the space it moves two normally,
-                liveBoard[row2 + 1][col2] = 0; // but set the space below it to be empty
-            }
-            else // if the piece is black,
-            {
-                liveBoard[row2][col2] = liveBoard[row1][col1]; // still update the space it moves to normally,
-                liveBoard[row2 - 1][col2] = 0; // but set the space above it to be empty
+        if (get_en_passant() == 1){ // and en passant has been performed,
+            if (white_or_black(liveBoard[row1][col1]) == 1){
+                liveBoard[row2][col2] = liveBoard[row1][col1]; // update the space it moves two normally,
+                liveBoard[row2 + 1][col2] = 0; // set the space below it to be empty
+            } else {
+                liveBoard[row2][col2] = liveBoard[row1][col1]; // update the space it moves to normally,
+                liveBoard[row2 - 1][col2] = 0; // set the space above it to be empty
             }
         } else if( abs(liveBoard[row1][col1]) == 1){    //if piece moved is black/white pawn
             if( white_or_black(liveBoard[row1][col1]) == 1){    //if white pawn

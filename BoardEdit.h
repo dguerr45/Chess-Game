@@ -12,10 +12,10 @@
 void printBoard(int liveBoard[8][8]);
 
 //function to handle user input to move pieces
-//returns 1 if piece is captured from move, 0 otherwise
-int moves (int liveBoard[8][8], char input1[5], char input2[5], int *capture, int *promotion);
+//returns 1 if pawn moves or capture happens, 0 otherwise
+int moves(int liveBoard[8][8], char input1[7], char input2[7], int *capture, int *promotion);
 
-//prompts user what piece they would liek to promote pawn too
+//prompts user what piece they would like to promote pawn too
 int promotePawn();
 
 #endif /* BOARD_EDIT_H */
