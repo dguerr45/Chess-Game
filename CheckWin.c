@@ -1,4 +1,9 @@
-//ragtag file for now which will contains win conditions
+/**********************************************************/
+/* Title: CheckWin.c                                      */
+/* Author: Daniel Guerra-Rojas                            */
+/*                                                        */
+/**********************************************************/
+
 #include <stdio.h>
 #include "CheckWin.h"
 #include "BoardEdit.h"
@@ -458,12 +463,4 @@ int checkmate(int b[8][8], int colorincheck){
     return 0;
 }
 
-
-
-
-
-
-
-
-
-  /* EOF */ 
+  /* EOF */

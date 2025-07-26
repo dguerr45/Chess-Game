@@ -2,9 +2,8 @@
 /* Title: TextLog.c										  */
 /* Author: Daniel Guerra-Rojas							  */
 /*														  */
-/* Modifications:										  */
-/* 05/11/21  DGR  Initial version						  */
 /**********************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

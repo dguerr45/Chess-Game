@@ -1,5 +1,9 @@
-// Temp file for check function (not implemented at all)
-//author: Felipe, Daniel
+/**********************************************************/
+/* Title: CheckWin.h                                     */
+/* Author: Daniel Guerra-Rojas                            */
+/*                                                        */
+/**********************************************************/
+
 #ifndef CHECKWIN_H
 #define CHECKWIN_H
 

@@ -1,11 +1,8 @@
-//Modification:
-//05/11/21  modified moves function - DGR
-//05/10/21  modified moves function - DGR
-//04/29/21  modified moves function - DGR
-//04/26/21  added moves function - DGR
-//04/25/21  initial version
-
-//.c file for BoardEdit, the file that edits and prints out the board
+/**********************************************************/
+/* Title: BoardEdit.c                                     */
+/* Author: Daniel Guerra-Rojas                            */
+/*                                                        */
+/**********************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>

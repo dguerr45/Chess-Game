@@ -1,13 +1,9 @@
 /**********************************************************/
 /* Title: PieceMovement.c                                 */
-/* Author: Daniel Guerra-Rojas, Maxwell Blocker           */
+/* Author: Daniel Guerra-Rojas                            */
 /*                                                        */
-/* Modifications:                                         */
-/* 05/08/21  DGR  cleansed king and pawn functions of bugs*/
-/* 05/03/21  MB   king, pawn, knight                      */
-/* 05/03/21  DGR  Initial version                         */
-/* 05/09/21  MB   en passant, minimizing knight/pawn      */
 /**********************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "PieceMovement.h"

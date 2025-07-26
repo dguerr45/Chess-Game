@@ -1,13 +1,11 @@
-//Modifications:
-//05/11/21  modified singleplayer and multiplayer declarations. added
-//          added resetInputs declaration - DGR
-//04/26/21  modified multiplayer declaration - DGR
-//04/25/21  initial version
+/**********************************************************/
+/* Title: GameSet.h                                     */
+/* Author: Daniel Guerra-Rojas                            */
+/*                                                        */
+/**********************************************************/
 
 #ifndef GAMESET_H
 #define GAMESET_H
-
-// header file for GameSet.c, the file that includes the menu tree functions
 
 #include "Player.h"
 #include "CheckWin.h"

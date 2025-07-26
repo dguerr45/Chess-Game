@@ -1,9 +1,9 @@
-//Modifications:
-//05/11/21  modified moves declaration - DGR
-//04/26/21  modified moves declaration - DGR
-//04/25/21  initial version
+/**********************************************************/
+/* Title: BoardEdit.h                                     */
+/* Author: Daniel Guerra-Rojas                            */
+/*                                                        */
+/**********************************************************/
 
-// header file for BoardEdit.c, the file that edits the board and prints it
 #ifndef BOARD_EDIT_H
 #define BOARD_EDIT_H
 

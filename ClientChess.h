@@ -2,9 +2,8 @@
 /* Title: ClientChess.h                                   */
 /* Author: Daniel Guerra-Rojas                            */
 /*                                                        */
-/* Modifications:                                         */
-/* 05/30/21  DGR  Initial version                         */
 /**********************************************************/
+
 #ifndef CLIENTCHESS_H
 #define CLIENTCHESS_H
 

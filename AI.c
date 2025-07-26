@@ -2,9 +2,8 @@
 /* Title: AI.c                                            */
 /* Author: Daniel Guerra-Rojas                            */
 /*                                                        */
-/* Modifications:                                         */
-/* 05/08/21  DGR  Initial version                         */
 /**********************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

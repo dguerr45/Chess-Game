@@ -2,9 +2,8 @@
 /* Title: ClientChess.c                                   */
 /* Author: Daniel Guerra-Rojas                            */
 /*                                                        */
-/* Modifications:                                         */
-/* 05/29/21  DGR  Initial version                         */
 /**********************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>

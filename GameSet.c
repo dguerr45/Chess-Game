@@ -1,14 +1,8 @@
-//Modifications:
-//05/11/21  modified printmenu, implemented BoardStructure into singleplayer
-//          and multiplayer, and added resetInputs function - DGR
-//05/10/21  modified singleplayer and multiplayer functions - DGR
-//05/08/21  added singleplayer function - DGR
-//05/03/21  changed EXIT input to RESIGN - DGR
-//04/29/21  modified multiplayer and printmenu function - DGR
-//04/26/21  modified multipayer and added resetBoard - DGR
-//04/25/21  initial version
-
-// .c file for GameSet, the file that has functions that handle the menu tree
+/**********************************************************/
+/* Title: GameSet.c                                       */
+/* Author: Daniel Guerra-Rojas                            */
+/*                                                        */
+/**********************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,7 +25,7 @@ void printmenu()
     PLAYER p1;
     PLAYER p2;
     int liveBoard[8][8] = {};
-    char input[2] = {};
+    char input[3] = {};
     LIST *list;
 
     do
@@ -47,12 +41,18 @@ void printmenu()
         //prompts user for menu input
         fgets(input, sizeof(input), stdin);
 
-        //clears input buffer if input larger than 1
-        if(input[0] != '\n' && input[0] != 0){
+        //clears input buffer if input larger than 2
+        if(input[1] != '\n' && input[1] != 0){
             while(getchar() != '\n');
         }
-        switch(input[0] + 8 - 56)
-        {
+
+        // If true, then input is invalid. There's more than one character
+        if(input[1] != '\n'){
+            printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+            continue;
+        }
+
+        switch(input[0] + 8 - 56){
             case 1:
                 list = CreateList();    //creates list pointer and assigned to location of allocated memory
                 networkSetup(p1, p2, liveBoard, list);
@@ -97,7 +97,7 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
     int resign = 0;
     int capture = 0;
     int promotion = 0;
-    char direction[2] = {};
+    char direction[3] = {};
     char king[3] = {};
     BOARD *board;
     ENTRY *entry;
@@ -118,20 +118,20 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
         //prompts user for input
         fgets(p1.playerColor, sizeof(p1.playerColor), stdin);
 
-        //clears input buffer if input larger than 1
-        if(p1.playerColor[0] != '\n' && p1.playerColor[0] != 0){
+        //clears input buffer if input larger than 2
+        if(p1.playerColor[1] != '\n' && p1.playerColor[1] != 0){
             while(getchar() != '\n');
         }
 
         //makes input lowercase
         p1.playerColor[0] = tolower(p1.playerColor[0]);
 
-        if(p1.playerColor[0] == 'w'){
+        if(p1.playerColor[0] == 'w' && p1.playerColor[1] == '\n'){
             p1.playerNum = 1;
             p2.playerColor[0] = 'b';
             p2.playerNum = 2;
             break;
-        } else if(p1.playerColor[0] == 'b'){
+        } else if(p1.playerColor[0] == 'b' && p1.playerColor[1] == '\n'){
             p1.playerNum = 2;
             p2.playerColor[0] = 'w';
             p2.playerNum = 1;
@@ -175,8 +175,9 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
                     printf("\nWhich direction do you want to castle? (NUMBER INPUTS ONLY -- left: 1, right: 2): ");
                     fgets(direction, sizeof(direction), stdin);
 
-                    // If input is larger than 1, then input buffer is cleared
-                    if(direction[0] != '\n' && direction[0] != 0){
+                    // If input is larger than 2, then input buffer is cleared
+                    if(direction[1] != '\n' && direction[1] != 0){
+                        direction[0] = '9';  // Input is more than 1 character, therefore setting to invalid input
                         while(getchar() != '\n');
                     }
 
@@ -267,12 +268,12 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
                     if(liveBoard[abs( input2[1] - 56 )][ (input2[0] - 97) ] <= 0 && PieceMovement(input1, input2, liveBoard) ){
                         break;
                     } else {
-                        printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+                        printf("\n\x1b[31mInvalid Move. Please try again.\x1b[0m\n");
                         printBoard(liveBoard);
                         input2[0] = input2[1] = input2[5] = 0;
                     }
                 } else {
-                    printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+                    printf("\n\x1b[31mInvalid Move. Please try again.\x1b[0m\n");
                     printBoard(liveBoard);
                     input2[0] = input2[1] = input2[5] = 0;
                 }
@@ -350,8 +351,9 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
                 printf("\nWhich direction do you want to castle? (NUMBER INPUTS ONLY -- left: 1, right: 2): ");
 		        fgets(direction, sizeof(direction), stdin);
 
-                // If input is larger than 1, then input buffer is cleared
-                if(direction[0] != '\n' && direction[0] != 0){
+                // If input is larger than 2, then input buffer is cleared
+                if(direction[1] != '\n' && direction[1] != 0){
+                    direction[0] = '9';  // Input is more than 1 character, therefore setting to invalid input
                     while(getchar() != '\n');
                 }
 
@@ -444,12 +446,12 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
                 if(liveBoard[abs( input2[1] - 56 )][ (input2[0] - 97) ] >= 0 && PieceMovement(input1, input2, liveBoard)){
                     break;
                 } else {
-                    printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+                    printf("\n\x1b[31mInvalid Move. Please try again.\x1b[0m\n");
                     printBoard(liveBoard);
                     input2[0] = input2[1] = input2[5] = 0;
                 }
             } else {
-                printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+                printf("\n\x1b[31mInvalid Move. Please try again.\x1b[0m\n");
                 printBoard(liveBoard);
                 input2[0] = input2[1] = input2[5] = 0;
             }
@@ -539,18 +541,18 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
         //prompts user for input
         fgets(p1.playerColor, sizeof(p1.playerColor), stdin);
 
-        //clears input buffer if input larger than 1
-        if(p1.playerColor[0] != '\n' && p1.playerColor[0] != 0){
+        //clears input buffer if input larger than 2
+        if(p1.playerColor[1] != '\n' && p1.playerColor[1] != 0){
             while(getchar() != '\n');
         }
         p1.playerColor[0] = tolower(p1.playerColor[0]);    //makes input lowercase
 
-        if(p1.playerColor[0] == 'w'){
+        if(p1.playerColor[0] == 'w' && p1.playerColor[0] == '\n'){
             p1.playerNum = 1;
             p2.playerNum = 2;
             p2.playerColor[0] = 'b';
             break;
-        } else if(p1.playerColor[0] == 'b'){
+        } else if(p1.playerColor[0] == 'b' && p1.playerColor[0] == '\n'){
             p1.playerNum = 3;    //temp value so that AI can go first
             p2.playerNum = 1;
             p2.playerColor[0] = 'w';
@@ -681,7 +683,7 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
                     if(liveBoard[abs( input2[1] - 56 )][ (input2[0] - 97) ] <= 0 && PieceMovement(input1, input2, liveBoard) ){
                         break;
                     } else {
-                        printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+                        printf("\n\x1b[31mInvalid Move. Please try again.\x1b[0m\n");
                         printBoard(liveBoard);
                         input2[0] = input2[1] = input2[5] = 0;
                     }
@@ -691,7 +693,7 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
                     if(liveBoard[abs( input2[1] - 56 )][ (input2[0] - 97) ] >= 0 && PieceMovement(input1, input2, liveBoard)){
                         break;
                     } else {
-                        printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+                        printf("\n\x1b[31mInvalid Move. Please try again.\x1b[0m\n");
                         printBoard(liveBoard);
                         input2[0] = input2[1] = input2[5] = 0;
                     }

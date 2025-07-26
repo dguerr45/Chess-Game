@@ -1,11 +1,8 @@
-######################################################################
-#
-# 05/11/21 DG				   : added BoardStructure.o 
-# 05/07/21 Felipe Damian       : added CheckWin files
-# 04/26/21 MB, DG, AK, FD      : updated Makefile for alpha
-# 04/25/21 Arhant Katare       : updated for EECS22 Lab Alpha Release
-#
-######################################################################
+#/**********************************************************/
+#/* Title: Makefile                                     */
+#/* Author: Daniel Guerra-Rojas                            */
+#/*                                                        */
+#/**********************************************************/
 
 DESIGN = ChessGame testChessGame Server
 
@@ -113,3 +110,5 @@ Server: Server.c
 clean:
 	rm -f $(DESIGN)
 	rm -f *.o
+
+# EOF #

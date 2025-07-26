@@ -1,9 +1,7 @@
 /**********************************************************/
 /* Title: Server.c                                        */
-/* Author: Daniel Guerra-Rojas, Rainer Doemer             */
+/* Author: Daniel Guerra-Rojas                            */
 /*                                                        */
-/* Modifications:                                         */
-/* 05/29/21  DGR  Initial version                         */
 /**********************************************************/
 
 #include <stdio.h>

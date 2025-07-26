@@ -2,9 +2,8 @@
 /* Title: PieceMovement.h                                 */
 /* Author: Daniel Guerra-Rojas                            */
 /*                                                        */
-/* Modifications:                                         */
-/* 05/03/21  DGR  Initial version                         */
 /**********************************************************/
+
 #ifndef PIECEMOVEMENT_H
 #define PIECEMOVEMENT_H
 
