@@ -9,7 +9,7 @@
 #include "PieceMovement.h"
 #include "CheckWin.h"
 
-int first_move = 0;  //--------------------------------------------------------------------------
+int first_move = 0;
 int en_passant_ye = 0;
 
 int king_move_w = 0;

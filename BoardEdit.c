@@ -108,7 +108,7 @@ int moves(int liveBoard[8][8], char input1[7], char input2[7], int *capture, int
                 }
             } else {    //if black pawn
                 if(row2 == 7){
-                    liveBoard[row2][col2] = promotePawn() + 1;
+                    liveBoard[row2][col2] = (promotePawn() + 1) * -1;
                     *promotion = liveBoard[row2][col2];
                 } else {
                     liveBoard[row2][col2] = liveBoard[row1][col1];
@@ -128,9 +128,8 @@ int moves(int liveBoard[8][8], char input1[7], char input2[7], int *capture, int
     return fiftyMoveReset;
 }
 
-//prompts user what piece they would liek to promote pawn too
 int promotePawn(){
-    int newPieceValue;
+    char newPieceValue[3] = {0};
 
     while(1){
         printf("\nWhat would you like to promote the pawn to?");
@@ -139,16 +138,25 @@ int promotePawn(){
         printf("\n3: Bishop");
         printf("\n4: Queen");
         printf("\n\nEnter choice (single number only): ");
-        scanf(" %d", &newPieceValue);
-        while(getchar() != '\n');    //clears input buffer
 
-        if( newPieceValue >= 1 && newPieceValue <=4){
+        //prompts users for input to select piece
+        fgets(newPieceValue, sizeof(newPieceValue), stdin);
+        
+        //if input is larger than 2, then input buffer is cleared
+        if(newPieceValue[1] != '\n' && newPieceValue[1] != 0){
+            while(getchar() != '\n');
+        }
+
+        // Converting char to int
+        newPieceValue[0] -= 48;
+
+        if(newPieceValue[1] == '\n' && newPieceValue[0] >= 1 && newPieceValue[0] <= 4){
             break;
         } else {
             printf("\n\x1b[31mInvalid Input. Please try again.\x1b[0m\n");
         }
     }
-    return newPieceValue;
+    return newPieceValue[0];
 }
 
 /* EOF */

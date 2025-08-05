@@ -24,8 +24,8 @@ void printmenu()
     int done = 0, i;
     PLAYER p1;
     PLAYER p2;
-    int liveBoard[8][8] = {};
-    char input[3] = {};
+    int liveBoard[8][8] = {0};
+    char input[3] = {0};
     LIST *list;
 
     do
@@ -90,15 +90,15 @@ void printmenu()
 void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
 {
     int castle = 0;
-    char input1[7] = {};
-    char input2[7] = {};
+    char input1[7] = {0};
+    char input2[7] = {0};
     int fiftyMoveCounter = 0;
     int cancel = 0;
     int resign = 0;
     int capture = 0;
     int promotion = 0;
-    char direction[3] = {};
-    char king[3] = {};
+    char direction[3] = {0};
+    char king[3] = {0};
     BOARD *board;
     ENTRY *entry;
     boardReset(liveBoard);
@@ -344,6 +344,7 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
             if(input1[5] != '\n' && input1[5] != 0){
                 while(getchar() != '\n');
             }
+
             if(strcmp(input1, "RESIGN") == 0){	//checks for "RESIGN" input
                 resign = p2.playerNum;
                 break;
@@ -515,12 +516,12 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
     int fiftyMoveCounter = 0;
     int capture = 0;
     int cancel = 0;
-    char input1[7] = {};
-    char input2[7] = {};
+    char input1[7] = {0};
+    char input2[7] = {0};
     int direction = 0;
     int castle = 0;
     int promotion = 0;
-	char king[3] = {};
+	char king[3] = {0};
     ENTRY *entry;
     BOARD *board;
 
