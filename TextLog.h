@@ -2,9 +2,8 @@
 /* Title: TextLog.h										  */
 /* Author: Daniel Guerra-Rojas							  */
 /*														  */
-/* Modifications:										  */
-/* 05/11/21  DGR  Initial version						  */
 /**********************************************************/
+
 #ifndef TEXTLOG_H
 #define TEXTLOG_H
 

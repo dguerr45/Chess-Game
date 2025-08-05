@@ -2,9 +2,8 @@
 /* Title: AI.h                                            */
 /* Author: Daniel Guerra-Rojas                            */
 /*                                                        */
-/* Modifications:                                         */
-/* 05/08/21  DGR  Initial version                         */
 /**********************************************************/
+
 #ifndef AI_H
 #define AI_H
 

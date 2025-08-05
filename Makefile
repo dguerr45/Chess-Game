@@ -1,11 +1,8 @@
-######################################################################
-#
-# 05/11/21 DG				   : added BoardStructure.o 
-# 05/07/21 Felipe Damian       : added CheckWin files
-# 04/26/21 MB, DG, AK, FD      : updated Makefile for alpha
-# 04/25/21 Arhant Katare       : updated for EECS22 Lab Alpha Release
-#
-######################################################################
+#/**********************************************************/
+#/* Title: Makefile                                     */
+#/* Author: Daniel Guerra-Rojas                            */
+#/*                                                        */
+#/**********************************************************/
 
 DESIGN = ChessGame testChessGame Server
 
@@ -29,9 +26,9 @@ all: ChessGame testChessGame Server
 GameSet.o: GameSet.h GameSet.c BoardEdit.h Player.h PieceMovement.h CheckWin.h BoardStructure.h TextLog.h AI.h
 	$(CC) $(CFLAGS) GameSet.c -o GameSet.o
 
-#target to generate Game.o
-Game.o: GameSet.h Game.c BoardEdit.h
-	$(CC) $(CFLAGS) Game.c -o Game.o
+#target to generate Main.o
+Game.o: GameSet.h Main.c BoardEdit.h
+	$(CC) $(CFLAGS) Main.c -o Main.o
 
 #target to generate BoardEdit.o
 BoardEdit.o: Player.h BoardEdit.h BoardEdit.c BoardStructure.h PieceMovement.h
@@ -66,8 +63,8 @@ testGameSet.o: GameSet.h GameSet.c BoardEdit.h Player.h PieceMovement.h CheckWin
 	$(CC) $(CFLAGS) $(DEBUG) GameSet.c -o testGameSet.o
 
 #target to generate testGame.o
-testGame.o: GameSet.h Game.c BoardEdit.h
-	$(CC) $(CFLAGS) $(DEBUG) Game.c -o testGame.o
+testGame.o: GameSet.h Main.c BoardEdit.h
+	$(CC) $(CFLAGS) $(DEBUG) Main.c -o testGame.o
 
 #target to generate testBoardEdit.o
 testBoardEdit.o: Player.h BoardEdit.h BoardEdit.c BoardStructure.h PieceMovement.h
@@ -100,8 +97,8 @@ testClientChess.o: GameSet.h ClientChess.c
 ########### generate executables ###########
 
 #target to generate Game
-ChessGame: Game.o BoardEdit.o GameSet.o PieceMovement.o CheckWin.o AI.o BoardStructure.o TextLog.o ClientChess.o
-	$(CC) $(LFLAGS) GameSet.o Game.o BoardEdit.o PieceMovement.o CheckWin.o AI.o BoardStructure.o TextLog.o ClientChess.o -o ChessGame
+ChessGame: Main.o BoardEdit.o GameSet.o PieceMovement.o CheckWin.o AI.o BoardStructure.o TextLog.o ClientChess.o
+	$(CC) $(LFLAGS) GameSet.o Main.o BoardEdit.o PieceMovement.o CheckWin.o AI.o BoardStructure.o TextLog.o ClientChess.o -o ChessGame
 
 testChessGame: testGame.o testBoardEdit.o testGameSet.o testPieceMovement.o testCheckWin.o testAI.o testBoardStructure.o testTextLog.o testClientChess.o
 	$(CC) $(LFLAGS) $(DEBUG) testGame.o testBoardEdit.o testGameSet.o testPieceMovement.o testCheckWin.o testAI.o testBoardStructure.o testTextLog.o testClientChess.o -o testChessGame
@@ -113,3 +110,5 @@ Server: Server.c
 clean:
 	rm -f $(DESIGN)
 	rm -f *.o
+
+# EOF #

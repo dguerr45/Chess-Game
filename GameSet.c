@@ -1,14 +1,8 @@
-//Modifications:
-//05/11/21  modified printmenu, implemented BoardStructure into singleplayer
-//          and multiplayer, and added resetInputs function - DGR
-//05/10/21  modified singleplayer and multiplayer functions - DGR
-//05/08/21  added singleplayer function - DGR
-//05/03/21  changed EXIT input to RESIGN - DGR
-//04/29/21  modified multiplayer and printmenu function - DGR
-//04/26/21  modified multipayer and added resetBoard - DGR
-//04/25/21  initial version
-
-// .c file for GameSet, the file that has functions that handle the menu tree
+/**********************************************************/
+/* Title: GameSet.c                                       */
+/* Author: Daniel Guerra-Rojas                            */
+/*                                                        */
+/**********************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,12 +41,18 @@ void printmenu()
         //prompts user for menu input
         fgets(input, sizeof(input), stdin);
 
-        //clears input buffer if input larger than 1
+        //clears input buffer if input larger than 2
         if(input[1] != '\n' && input[1] != 0){
             while(getchar() != '\n');
         }
-        switch(input[0] + 8 - 56)
-        {
+
+        // If true, then input is invalid. There's more than one character
+        if(input[1] != '\n'){
+            printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+            continue;
+        }
+
+        switch(input[0] + 8 - 56){
             case 1:
                 list = CreateList();    //creates list pointer and assigned to location of allocated memory
                 networkSetup(p1, p2, liveBoard, list);
@@ -97,7 +97,7 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
     int resign = 0;
     int capture = 0;
     int promotion = 0;
-    int direction = 0;
+    char direction[3] = {};
     char king[3] = {};
     BOARD *board;
     ENTRY *entry;
@@ -118,7 +118,7 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
         //prompts user for input
         fgets(p1.playerColor, sizeof(p1.playerColor), stdin);
 
-        //clears input buffer if input larger than 1
+        //clears input buffer if input larger than 2
         if(p1.playerColor[1] != '\n' && p1.playerColor[1] != 0){
             while(getchar() != '\n');
         }
@@ -140,9 +140,8 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
             printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
         }
     }
-    printBoard(liveBoard);
     printf("\nInput follows standard 'a1' or 'c4'\nType '\x1b[92mRESIGN\x1b[0m' when you wish to stop the game\n");
-    printf("\nType '\x1b[92mCASTLE\x1b[0m' during your turn if you would like to castle (NOTE: to castle, your king and the rook you are using cannot have moved from their start positions).");
+    printf("\nType '\x1b[92mCASTLE\x1b[0m' during your turn if you would like to castle (NOTE: to castle, your king and the rook you are using cannot have moved from their start positions).\n");
 
     //switches between players until game ends
     while(1){
@@ -150,14 +149,18 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
         //if cancel is 1, then player 2 wanted to pick a new piece
         if( !cancel ){
 
-            //prompts user to select a piece
-            //do while loop makes sure player chooses valid piece and if input is valid
+            // Prompts Player 1 to select a piece
+            // Do while loop makes sure player chooses valid piece and if input is valid
             while(1){
+                printBoard(liveBoard);
+                resetInputs(input1);
+
                 if(p1.playerNum == 1){
                     printf("\nPlayer 1 (White), select a piece you want to move: ");
                 } else {
                     printf("\nPlayer 2 (White), select a piece you want to move: ");
                 }
+
                 //prompts users for input to select piece
                 fgets(input1, sizeof(input1), stdin);
                 
@@ -170,24 +173,37 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
                     break;
                 } else if(strcmp(input1, "CASTLE") == 0){    // checks for "CASTLE" input
                     printf("\nWhich direction do you want to castle? (NUMBER INPUTS ONLY -- left: 1, right: 2): ");
-                    scanf(" %d", &direction);		
+                    fgets(direction, sizeof(direction), stdin);
+
+                    // If input is larger than 2, then input buffer is cleared
+                    if(direction[1] != '\n' && direction[1] != 0){
+                        direction[0] = '9';  // Input is more than 1 character, therefore setting to invalid input
+                        while(getchar() != '\n');
+                    }
+
+                    // Convert char input to int
+                    direction[0] = direction[0] - 48;
 
                     printf("\nWhat is the current location of your king? (input follows standard -- ex. 'e1'): ");
-                    scanf(" %2s", king);
-                    while(getchar() != '\n');
+                    fgets(king, sizeof(king), stdin);
+
+                    // If input is larger than 2, then input buffer is cleared
+                    if(king[1] != '\n' && king[1] != 0){
+                        while(getchar() != '\n');
+                    }
+
                     king[0] = tolower(king[0]);    //makes input lowercase
                     
-                    if (castling(king, liveBoard, direction) == 2)
-                    {
+                    if (castling(king, liveBoard, direction[0]) == 2){
                         printf("\nYou cannot castle. There are pieces in the way.\n");
-                    }
-                    else if (castling(king, liveBoard, direction) == 0)
-                    {
+                        continue;
+
+                    } else if (castling(king, liveBoard, direction[0]) == 0){
                         printf("\nIncorrect input.\n");
-                    }
-                    else
-                    {
-                        castling_move(king, liveBoard, direction);
+                        continue;
+
+                    } else {
+                        castling_move(king, liveBoard, direction[0]);
                     }
                     king[0] = king[1] = 0;
                     castle = 1;
@@ -201,12 +217,12 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
                     } else {
                         printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
                         printBoard(liveBoard);
-                        input1[0] = input1[1] = input1[5] = 0;
+                        resetInputs(input1);
                     }
                 } else {
                     printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
                     printBoard(liveBoard);
-                    input1[0] = input1[1] = input1[5] = 0;
+                    resetInputs(input1);
                 }
             }
 
@@ -215,18 +231,19 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
             break;
         }
 
-        //prompts user where he would like to move the piece
-        //do while loop makes sure input is valid
+        // Prompts Player 1 where he would like to move the piece
+        // Do while loop makes sure input is valid
         while(1){
-            if (castle == 1) // checks if castle was performed
-	        {
+            if (castle == 1){ // checks if castle was performed
 		        break;
 	        }
+
             if(p1.playerNum == 1){
                 printf("\nPlayer 1 (White), select a space to move selected piece to: ");
             } else {
                 printf("\nPlayer 2 (White), select a space to move selected piece to: ");
             }
+
             //prompts users for input to select piece
             fgets(input2, sizeof(input2), stdin);
             
@@ -239,7 +256,8 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
                 break;
             } else if(strcmp(input2, "CANCEL") == 0){    //if "CANCEL", then player 1 wants to pick a new piece
                 cancel = 1;
-                resetInputs(input1, input2);
+                resetInputs(input1);
+                resetInputs(input2);
                 break;
             }
                 input2[0] = tolower(input2[0]);    //makes input lowercase
@@ -250,12 +268,12 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
                     if(liveBoard[abs( input2[1] - 56 )][ (input2[0] - 97) ] <= 0 && PieceMovement(input1, input2, liveBoard) ){
                         break;
                     } else {
-                        printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+                        printf("\n\x1b[31mInvalid Move. Please try again.\x1b[0m\n");
                         printBoard(liveBoard);
                         input2[0] = input2[1] = input2[5] = 0;
                     }
                 } else {
-                    printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+                    printf("\n\x1b[31mInvalid Move. Please try again.\x1b[0m\n");
                     printBoard(liveBoard);
                     input2[0] = input2[1] = input2[5] = 0;
                 }
@@ -287,33 +305,42 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
             board->promotion = promotion;    //records if promotion happened
             board->resign = 0;    //0 because no one has resigned
 
-            resetInputs(input1, input2);
-            printBoard(liveBoard);
+            resetInputs(input1);
+            resetInputs(input2);
             
             if(castle == 1){    //records if castle happened in game
                 castle = 0;
-                board->castle = direction;
-                direction = 0;
+                board->castle = direction[0];
+                direction[0] = 0;
             }
             if( check(liveBoard) == 2 ){
-                printf("\n\x1b[96mBlack is in check\x1b[0m");
+                printf("\n\x1b[96mBlack is in check\x1b[0m\n");
                 board->check = 1;
             }
         }
         cancel = 0;    //resets "cancel" so player 1 doesn't get skipped anymore
 
-        //prompts user to select a piece
-        //do while loop makes sure player chooses valid piece and if input is valid
+        // Continue breaking while loops if draw occurs
+        if(fiftyMoveCounter == 50){
+            break;
+        }
+
+        // Prompts Player 2 to select a piece
+        // Do while loop makes sure player chooses valid piece and if input is valid
         while(1){
+            printBoard(liveBoard);
+            resetInputs(input1);
+
             if(p2.playerNum == 1){
                 printf("\nPlayer 1 (Black), select a piece you want to move: ");
             } else {
                 printf("\nPlayer 2 (Black), select a piece you want to move: ");
             }
+            
             //prompts users for input to select piece
             fgets(input1, sizeof(input1), stdin);
             
-            //if input is larger than 5, then input buffer is cleared
+            //if input is larger than 6, then input buffer is cleared
             if(input1[5] != '\n' && input1[5] != 0){
                 while(getchar() != '\n');
             }
@@ -322,26 +349,39 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
                 break;
             } else if(strcmp(input1, "CASTLE") == 0){    // checks for "CASTLE" input
                 printf("\nWhich direction do you want to castle? (NUMBER INPUTS ONLY -- left: 1, right: 2): ");
-		        scanf(" %d", &direction);		
+		        fgets(direction, sizeof(direction), stdin);
+
+                // If input is larger than 2, then input buffer is cleared
+                if(direction[1] != '\n' && direction[1] != 0){
+                    direction[0] = '9';  // Input is more than 1 character, therefore setting to invalid input
+                    while(getchar() != '\n');
+                }
+
+                // Convert char input to int
+                direction[0] = direction[0] - 48;
 
 		        printf("\nWhat is the current location of your king? (input follows standard -- ex. 'e1'): ");
-		        scanf(" %2s", king);
-                while(getchar() != '\n');
+		        fgets(king, sizeof(king), stdin);
+
+                // If input is larger than 2, then input buffer is cleared
+                if(king[1] != '\n' && king[1] != 0){
+                    while(getchar() != '\n');
+                }
+
                 king[0] = tolower(king[0]);    //makes input lowercase
                 
-                printf("castling: %d", castling(king, liveBoard, direction));
+                printf("castling: %d", castling(king, liveBoard, direction[0]));
 
-                if (castling(king, liveBoard, direction) == 2)
-                {
+                if (castling(king, liveBoard, direction[0]) == 2){
                     printf("\nYou cannot castle. There are pieces in the way.\n");
-                }
-                else if (castling(king, liveBoard, direction) == 0)
-                {
+                    continue;
+
+                } else if (castling(king, liveBoard, direction[0]) == 0){
                     printf("\nIncorrect input.\n");
-                }
-                else
-                {
-                    castling_move(king, liveBoard, direction);
+                    continue;
+
+                } else {
+                    castling_move(king, liveBoard, direction[0]);
                 }
                 king[0] = king[1] = 0;
                 castle = 1;
@@ -369,22 +409,23 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
             break;
         }
 
-        //prompts user where he would like to move the piece
-        //do while loop makes sure input is valid
+        // Prompts Player 2 where he would like to move the piece
+        // Do while loop makes sure input is valid
         while(1){
-            if (castle == 1) // checks if castle was performed
-	        {
+            if (castle == 1){ // checks if castle was performed
 		        break;
 	        }
+
             if(p2.playerNum == 1){
                 printf("\nPlayer 1 (Black), select a space to move selected piece to: ");
             } else {
                 printf("\nPlayer 2 (Black), select a space to move selected piece to: ");
             }
-            //prompts users for input to select piece
+
+            // Prompts users for input to select piece
             fgets(input2, sizeof(input2), stdin);
             
-            //if input is larger than 5, then input buffer is cleared
+            // If input is larger than 6, then input buffer is cleared
             if(input2[5] != '\n' && input2[5] != 0){
                 while(getchar() != '\n');
             }
@@ -393,7 +434,8 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
                 break;
             } else if(strcmp(input2, "CANCEL") == 0){    //if "CANCEL", then player 2 wants to pick a new piece
                 cancel = 1;
-                resetInputs(input1, input2);
+                resetInputs(input1);
+                resetInputs(input2);
                 break;
             }
             input2[0] = tolower(input2[0]);    //makes input lowercase
@@ -404,12 +446,12 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
                 if(liveBoard[abs( input2[1] - 56 )][ (input2[0] - 97) ] >= 0 && PieceMovement(input1, input2, liveBoard)){
                     break;
                 } else {
-                    printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+                    printf("\n\x1b[31mInvalid Move. Please try again.\x1b[0m\n");
                     printBoard(liveBoard);
                     input2[0] = input2[1] = input2[5] = 0;
                 }
             } else {
-                printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+                printf("\n\x1b[31mInvalid Move. Please try again.\x1b[0m\n");
                 printBoard(liveBoard);
                 input2[0] = input2[1] = input2[5] = 0;
             }
@@ -440,29 +482,30 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
         board->promotion = promotion;    //records if promotion happened
         board->resign = 0;    //0 because no one has resigned
 
-        resetInputs(input1, input2);
+        resetInputs(input1);
+        resetInputs(input2);
         printBoard(liveBoard);
 	
         if(castle == 1){    //records if castle happened in game
             castle = 0;
-            board->castle = direction;
-            direction = 0;
+            board->castle = direction[0];
+            direction[0] = 0;
         }
 	    if( check(liveBoard) == 1 ){
-            printf("\n\x1b[96mWhite is in check\x1b[0m");
+            printf("\n\x1b[96mWhite is in check\x1b[0m\n");
             board->check = 1;
         }
     }
-    if(resign != 0){    //if one of the players resigned
+    if(resign != 0){    // if one of the players resigned
         entry = CreateEntry();
-        board = CreateBoard(entry, liveBoard, 0);    //0 because no player moved
+        board = CreateBoard(entry, liveBoard, 0);    // 0 because no player moved
         Append(list, entry);
-        board->resign = resign;    //records which player resigned
-    } else if(fiftyMoveCounter == 50){    //if the game ended in draw
+        board->resign = resign;    // records which player resigned
+    } else if(fiftyMoveCounter == 50){    // if the game ended in draw
         entry = CreateEntry();
-        board = CreateBoard(entry, liveBoard, 0);    //0 because no player moved
+        board = CreateBoard(entry, liveBoard, 0);    // 0 because no player moved
         Append(list, entry);
-        board->draw = 1;    //records if game ended in draw
+        board->draw = 1;    // records if game ended in draw
     }
 }
 
@@ -498,18 +541,18 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
         //prompts user for input
         fgets(p1.playerColor, sizeof(p1.playerColor), stdin);
 
-        //clears input buffer if input larger than 1
+        //clears input buffer if input larger than 2
         if(p1.playerColor[1] != '\n' && p1.playerColor[1] != 0){
             while(getchar() != '\n');
         }
         p1.playerColor[0] = tolower(p1.playerColor[0]);    //makes input lowercase
 
-        if(p1.playerColor[0] == 'w' && p1.playerColor[1] != 0){
+        if(p1.playerColor[0] == 'w' && p1.playerColor[0] == '\n'){
             p1.playerNum = 1;
             p2.playerNum = 2;
             p2.playerColor[0] = 'b';
             break;
-        } else if(p1.playerColor[0] == 'b' && p1.playerColor[1] != 0){
+        } else if(p1.playerColor[0] == 'b' && p1.playerColor[0] == '\n'){
             p1.playerNum = 3;    //temp value so that AI can go first
             p2.playerNum = 1;
             p2.playerColor[0] = 'w';
@@ -524,7 +567,7 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
     //switches between player and AI until game ends
     while(1){
 
-        //prompts player to select a piece
+        //Prompts Player 1 to select a piece
         //do while loop makes sure player chooses valid piece and if input is valid
         while(1){
             if(p1.playerNum == 1){    //if player chose to be white
@@ -601,7 +644,7 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
             break;
         }
 
-        //prompts user where he would like to move the piece
+        //Prompts Player 1 where he would like to move the piece
         //do while loop makes sure input is valid
         while(1){
             if (castle == 1) // checks if castle was performed
@@ -627,7 +670,8 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
                 break;
             } else if(strcmp(input2, "CANCEL") == 0){
                 cancel = 1;
-                resetInputs(input1, input2);
+                resetInputs(input1);
+                resetInputs(input2);
                 break;
             }
             input2[0] = tolower(input2[0]);    //makes input lowercase
@@ -639,7 +683,7 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
                     if(liveBoard[abs( input2[1] - 56 )][ (input2[0] - 97) ] <= 0 && PieceMovement(input1, input2, liveBoard) ){
                         break;
                     } else {
-                        printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+                        printf("\n\x1b[31mInvalid Move. Please try again.\x1b[0m\n");
                         printBoard(liveBoard);
                         input2[0] = input2[1] = input2[5] = 0;
                     }
@@ -649,7 +693,7 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
                     if(liveBoard[abs( input2[1] - 56 )][ (input2[0] - 97) ] >= 0 && PieceMovement(input1, input2, liveBoard)){
                         break;
                     } else {
-                        printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+                        printf("\n\x1b[31mInvalid Move. Please try again.\x1b[0m\n");
                         printBoard(liveBoard);
                         input2[0] = input2[1] = input2[5] = 0;
                     }
@@ -687,7 +731,8 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
             board->promotion = promotion;    //records if promotion happened
             board->resign = 0;    //0 because no one has resigned
 
-            resetInputs(input1, input2);
+            resetInputs(input1);
+            resetInputs(input2);
             printBoard(liveBoard);
 
             if(castle == 1){    //records if castle happened in game
@@ -697,12 +742,12 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
             }
             if(p1.playerNum == 1){
                 if( check(liveBoard) == 2 ){
-                    printf("\n\x1b[96mBlack is in check\x1b[0m");
+                    printf("\n\x1b[96mBlack is in check\x1b[0m\n");
                     board->check = 1;
                 } 
             } else {
                 if( check(liveBoard) == 1 ){
-                    printf("\n\x1b[96mWhite is in check\x1b[0m");
+                    printf("\n\x1b[96mWhite is in check\x1b[0m\n");
                     board->check = 1;
                 }
             }
@@ -733,17 +778,18 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
         board->promotion = promotion;    //records if promotion happened
         board->resign = 0;    //0 because no one has resigned
 
-        resetInputs(input1, input2);
+        resetInputs(input1);
+        resetInputs(input2);
         printBoard(liveBoard);
 
         if(p1.playerNum == 1){
             if( check(liveBoard) == 1 ){
-	            printf("\n\x1b[96mWhite is in check\x1b[0m");
+	            printf("\n\x1b[96mWhite is in check\x1b[0m\n");
                 board->check = 1;
             }
         } else{
             if( check(liveBoard) == 2 ){
-                printf("\n\x1b[96mBlack is in check\x1b[0m");
+                printf("\n\x1b[96mBlack is in check\x1b[0m\n");
                 board->check = 1;
             }
         }
@@ -761,10 +807,8 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
     }
 }
 
-//resets character arrays used for input
-void resetInputs(char input1[7], char input2[7]){
-    input1[0] = input1[1] = input1[2] = input1[3] = input1[4] = input1[5] = 0;
-    input2[0] = input2[1] = input2[2] = input2[3] = input2[4] = input2[5] = 0;
+void resetInputs(char input[7]){
+    input[0] = input[1] = input[2] = input[3] = input[4] = input[5] = input[6] = input[7] = 0;
 }
 
 //initializes the board for beginning of game

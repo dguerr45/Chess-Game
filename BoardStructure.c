@@ -1,14 +1,9 @@
 /**********************************************************/
-/* Title: BoardStructures.c                               */
+/* Title: BoardStructure.c                                */
 /* Author: Daniel Guerra-Rojas                            */
 /*                                                        */
-/* Modifications:                                         */
-/* 05/11/21  DGR  modified CreateBoard function           */
-/* 05/03/21  DGR  Updated CreateBoard function            */
-/* 04/23/21  DGR  Added Creation functions and list       */
-/*                editing functions                       */
-/* 04/20/21  DGR  Initial version                         */
 /**********************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "BoardStructure.h"

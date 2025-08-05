@@ -2,9 +2,8 @@
 /* Title: ClientChess.c                                   */
 /* Author: Daniel Guerra-Rojas                            */
 /*                                                        */
-/* Modifications:                                         */
-/* 05/29/21  DGR  Initial version                         */
 /**********************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -495,7 +494,8 @@ void NetworkMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list,
                 break;
             } else if(strcmp(SendBuf, "CANCEL\n") == 0){
                 cancel = 1;
-                resetInputs(input1, input2);
+                resetInputs(input1);
+                resetInputs(input2);
                 break;
             } else if(SendBuf[0] == '\"' && SendBuf[strlen(SendBuf)-2] == '\"'){
                 if(strlen(SendBuf) < 255){
@@ -619,7 +619,8 @@ void NetworkMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list,
             }
             CloseConnection(SocketFD);
 
-            resetInputs(input1, input2);
+            resetInputs(input1);
+            resetInputs(input2);
             printBoard(liveBoard);
 
             if(castle == 1){    //records if castle happened in game
@@ -745,7 +746,8 @@ void NetworkMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list,
         board->promotion = promotion;    //records if promotion happened
         board->resign = 0;    //0 because no one has resigned
 
-        resetInputs(input1, input2);
+        resetInputs(input1);
+        resetInputs(input2);
         printBoard(liveBoard);
 
         if(p1.playerNum == 1){
