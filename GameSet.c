@@ -193,18 +193,22 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
                     }
 
                     king[0] = tolower(king[0]);    //makes input lowercase
-                    
-                    if (castling(king, liveBoard, direction[0]) == 2){
-                        printf("\nYou cannot castle. There are pieces in the way.\n");
-                        continue;
-
-                    } else if (castling(king, liveBoard, direction[0]) == 0){
-                        printf("\nIncorrect input.\n");
-                        continue;
-
-                    } else {
-                        castling_move(king, liveBoard, direction[0]);
+                    switch(castling(king, liveBoard, direction[0])){
+                        case 2:
+                            printf("\n\x1b[31mYou cannot castle. There are pieces in the way.\x1b[0m\n");
+                            break;
+                        case 1:
+                            castling_move(king, liveBoard, direction[0]);
+                            break;
+                        case 0:
+                            printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+                            break;
+                        default:
+                            printf("\n\x1b[31mERROR! ERROR! I don't know how you did it,"
+                                " but you've somehow broken my code. Congrats!\x1b[0m\n");
+                            break;
                     }
+
                     king[0] = king[1] = 0;
                     castle = 1;
                     break;
@@ -370,20 +374,22 @@ void localMultiplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list)
                 }
 
                 king[0] = tolower(king[0]);    //makes input lowercase
-                
-                printf("castling: %d", castling(king, liveBoard, direction[0]));
-
-                if (castling(king, liveBoard, direction[0]) == 2){
-                    printf("\nYou cannot castle. There are pieces in the way.\n");
-                    continue;
-
-                } else if (castling(king, liveBoard, direction[0]) == 0){
-                    printf("\nIncorrect input.\n");
-                    continue;
-
-                } else {
-                    castling_move(king, liveBoard, direction[0]);
+                switch(castling(king, liveBoard, direction[0])){
+                    case 2:
+                        printf("\n\x1b[31mYou cannot castle. There are pieces in the way.\x1b[0m\n");
+                        break;
+                    case 1:
+                        castling_move(king, liveBoard, direction[0]);
+                        break;
+                    case 0:
+                        printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+                        break;
+                    default:
+                        printf("\n\x1b[31mERROR! ERROR! I don't know how you did it,"
+                            " but you've somehow broken my code. Congrats!\x1b[0m\n");
+                        break;
                 }
+
                 king[0] = king[1] = 0;
                 castle = 1;
                 break;
@@ -518,7 +524,7 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
     int cancel = 0;
     char input1[7] = {0};
     char input2[7] = {0};
-    int direction = 0;
+    char direction[3] = {0};
     int castle = 0;
     int promotion = 0;
 	char king[3] = {0};
@@ -590,25 +596,42 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
                 break;
             } else if(strcmp(input1, "CASTLE") == 0){    // checks for "CASTLE" input
                 printf("\nWhich direction do you want to castle? (NUMBER INPUTS ONLY -- left: 1, right: 2): ");
-		        scanf(" %d", &direction);		
+		        fgets(direction, sizeof(direction), stdin);
+
+                // If input is larger than 2, then input buffer is cleared
+                if(direction[1] != '\n' && direction[1] != 0){
+                    direction[0] = '9';  // Input is more than 1 character, therefore setting to invalid input
+                    while(getchar() != '\n');
+                }
+
+                // Convert char input to int
+                direction[0] = direction[0] - 48;
 
                 printf("\nWhat is the current location of your king? (input follows standard -- ex. 'e1'): ");
-                scanf(" %2s", king);
-                while(getchar() != '\n');
-                king[0] = tolower(king[0]);    //makes input lowercase
+                fgets(king, sizeof(king), stdin);
 
-                if (castling(king, liveBoard, direction) == 2)
-                {
-                    printf("\nYou cannot castle. There are pieces in the way.");
+                // If input is larger than 2, then input buffer is cleared
+                if(king[1] != '\n' && king[1] != 0){
+                    while(getchar() != '\n');
                 }
-                else if (castling(king, liveBoard, direction) == 0)
-                {
-                    printf("\nIncorrect input.");
+
+                king[0] = tolower(king[0]);    //makes input lowercase
+                switch(castling(king, liveBoard, direction[0])){
+                    case 2:
+                        printf("\n\x1b[31mYou cannot castle. There are pieces in the way.\x1b[0m\n");
+                        break;
+                    case 1:
+                        castling_move(king, liveBoard, direction[0]);
+                        break;
+                    case 0:
+                        printf("\n\x1b[31mIncorrect Input. Please try again.\x1b[0m\n");
+                        break;
+                    default:
+                        printf("\n\x1b[31mERROR! ERROR! I don't know how you did it,"
+                               " but you've somehow broken my code. Congrats!\x1b[0m\n");
+                        break;
                 }
-                else
-                {
-                    castling_move(king, liveBoard, direction);
-                }
+
                 king[0] = king[1] = 0;
                 castle = 1;
                 break;
@@ -648,8 +671,7 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
         //Prompts Player 1 where he would like to move the piece
         //do while loop makes sure input is valid
         while(1){
-            if (castle == 1) // checks if castle was performed
-	        {
+            if (castle == 1){ // checks if castle was performed
 		        break;
 	        }
             if(p1.playerNum == 1){
@@ -738,8 +760,8 @@ void singleplayer(PLAYER p1, PLAYER p2, int liveBoard[8][8], LIST *list){
 
             if(castle == 1){    //records if castle happened in game
                 castle = 0;
-                board->castle = direction;
-                direction = 0;
+                board->castle = direction[0];
+                direction[0] = 0;
             }
             if(p1.playerNum == 1){
                 if( check(liveBoard) == 2 ){

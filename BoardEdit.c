@@ -132,12 +132,12 @@ int promotePawn(){
     char newPieceValue[3] = {0};
 
     while(1){
-        printf("\nWhat would you like to promote the pawn to?");
-        printf("\n\n1: Rook");
-        printf("\n2: Knight");
-        printf("\n3: Bishop");
-        printf("\n4: Queen");
-        printf("\n\nEnter choice (single number only): ");
+        printf("\nWhat would you like to promote the pawn to?\n");
+        printf("1: Rook\n");
+        printf("2: Knight\n");
+        printf("3: Bishop\n");
+        printf("4: Queen\n");
+        printf("\nEnter choice (single number only): ");
 
         //prompts users for input to select piece
         fgets(newPieceValue, sizeof(newPieceValue), stdin);
@@ -152,6 +152,7 @@ int promotePawn(){
 
         if(newPieceValue[1] == '\n' && newPieceValue[0] >= 1 && newPieceValue[0] <= 4){
             break;
+
         } else {
             printf("\n\x1b[31mInvalid Input. Please try again.\x1b[0m\n");
         }
